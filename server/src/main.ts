@@ -19,6 +19,10 @@ async function bootstrap() {
         transform: true
     })
   )
+
+  app.enableCors({
+    origin: 'http://localhost:5173'
+  })
   // 환경변수 PORT가 있으면 그 포트를, 없으면 3000번 포트로 서버를 연다.
   await app.listen(process.env.PORT ?? 3000);
 }
