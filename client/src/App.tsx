@@ -1,11 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import { getTodos, createTodo } from './api/todo/todo.api'
+import type Todo from './types/todo/todo'
+
 
 function App() {
   const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [todo, setTodo] = useState({
+    id: 0,
+    title: '새로추가',
+    done: false
+  })
+  
+  // 화면이 처음 뜰 때 한 번만 목록을 불러온다.
+  useEffect(() => {
+    getTodos()
+      .then((data) => {
+        console.log(data)
+        if (!Array.isArray(data)) throw new Error('예상과 다른 응답');
+        setTodos(data)
+      })
+      .catch(() => setError('목록을 불러오지 못했어요.'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p>불러오는 중...</p>;
+  if (error) return <p>{error}</p>;
+
 
   return (
     <>
@@ -28,6 +56,17 @@ function App() {
         >
           Count is {count}
         </button>
+        <ul>
+          {todos.map((todo) => 
+            <li key={todo.id}>
+                 {todo.done ? '✅' : '⬜'} {todo.title}
+            </li>
+          )}
+        </ul>
+        <button onClick={() => createTodo(todo)}>
+            추가생성
+        </button>
+        <button onClick={() => getTodos()}>조회하기</button>
       </section>
 
       <div className="ticks"></div>

@@ -7,7 +7,7 @@ export default defineConfig({
   // API Server CORS Config
   server: {
     proxy: {
-      'api': {
+      '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
         // /api/xx => /xx
