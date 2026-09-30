@@ -33,7 +33,7 @@ export class TodosService {
     return todo;
   }
 
-  register(todo: CreateDto): void {
+  register(todo: CreateDto): Todo {
     const nextId =
     this.todos.length > 0
       ? Math.max(...this.todos.map((todo) => todo.id)) + 1
@@ -46,5 +46,6 @@ export class TodosService {
     
     this.todos.push(target);
     console.log('push 직후:', this.todos);
+    return target
   }
 }
