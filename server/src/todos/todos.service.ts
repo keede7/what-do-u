@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import Todo from './entity/todo.js'
+import CreateDto from './dto/create-dto.js';
 // Todo 한 건의 형태
 // export interface Todo {
 //   id: number;
@@ -12,7 +13,7 @@ import Todo from './entity/todo.js'
 @Injectable()
 export class TodosService {
   // 임시 데이터 (DB 연결 전까지 메모리에 보관, 서버 재시작 시 초기화됨)
-  private readonly todos: Todo[] = [
+  private todos: Todo[] = [
     { id: 1, title: '장보기', done: false },
     { id: 2, title: 'NestJS 공부하기', done: true },
     { id: 3, title: '운동하기', },
@@ -30,5 +31,20 @@ export class TodosService {
       throw new NotFoundException(`Todo #${id} not found`);
     }
     return todo;
+  }
+
+  register(todo: CreateDto): void {
+    const nextId =
+    this.todos.length > 0
+      ? Math.max(...this.todos.map((todo) => todo.id)) + 1
+      : 1;
+
+    const target: Todo = {
+      ...todo.toEntity(),
+      id: nextId,
+    }
+    
+    this.todos.push(target);
+    console.log('push 직후:', this.todos);
   }
 }
