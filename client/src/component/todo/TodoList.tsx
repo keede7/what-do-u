@@ -3,6 +3,7 @@ import type Todo from '../../types/todo/todo';
 import { getTodos, createTodo, removeTodo, modifyTodo } from '../../api/todo/todo.api'
 import { TodoItem } from './TodoItem';
 import type { ChangeEvent } from 'react'
+import './Todo.css'
 
 export default function TodoList() {
 
@@ -61,24 +62,25 @@ export default function TodoList() {
     if (error) return <p>{error}</p>;
 
     return (
-        <>
-            <input value={title} onChange={changeTitle} placeholder='할일을 작성하세요' />
-            <input type='checkbox' checked={done} onChange={changeDone}/>
-            <button onClick={
-                () => createTodo({
-                    id: 0, 
-                    title: title,
-                    done: done
-                })
-                    .then((res) => {
-                        setTodos((prev) => [...prev, res])
-                        setTitle('')
+        <div className="todo-card">
+            <div className="todo-form">
+                <input className="todo-input" value={title} onChange={changeTitle} placeholder='할일을 작성하세요' />
+                <button className="todo-add" onClick={
+                    () => createTodo({
+                        id: 0, 
+                        title: title,
+                        done: done
                     })
-            }>
-                추가생성
-            </button>
-            <button onClick={() => getTodos()}>조회하기</button>
-            <ul>
+                        .then((res) => {
+                            setTodos((prev) => [...prev, res])
+                            setTitle('')
+                        })
+                }>
+                    추가생성
+                </button>
+                <button className="todo-reload" onClick={() => getTodos()}>조회하기</button>
+            </div>
+            <ul className="todo-list">
                 {/* 상위 구조에서 값과 기능 자체만을 넘겨준다. */}
                 {todos.map((todo) =>
                     <TodoItem key={todo.id} todo={todo} onDelete={remove} onCheck={onCheck}/>
@@ -87,6 +89,10 @@ export default function TodoList() {
                     // </li>
                 )}
             </ul>
-        </>
+            {todos.length === 0 && <p className="todo-empty">할 일이 없어요.</p>}
+            <p className="todo-count">
+                완료 {todos.filter((t) => t.done).length} / 전체 {todos.length}
+            </p>
+        </div>
     )
 }

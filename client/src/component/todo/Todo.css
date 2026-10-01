@@ -1,0 +1,167 @@
+/* Todo 목록 카드 */
+.todo-card {
+  width: 100%;
+  max-width: 520px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: var(--shadow);
+}
+
+/* 입력 줄: 체크박스 + 입력창 + 버튼 */
+.todo-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.todo-input {
+  flex: 1 1 160px;
+  min-width: 0;
+  font: inherit;
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-h);
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+}
+
+.todo-add,
+.todo-reload {
+  font: inherit;
+  font-size: 15px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.todo-add {
+  border: none;
+  color: #fff;
+  background: var(--accent);
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.todo-reload {
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  background: transparent;
+
+  &:hover {
+    background: var(--accent-bg);
+  }
+}
+
+/* 목록 */
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.todo-title {
+  flex: 1;
+  color: var(--text-h);
+  word-break: break-word;
+}
+
+/* 완료된 항목은 취소선 + 흐리게 */
+.todo-item.done .todo-title {
+  color: var(--text);
+  text-decoration: line-through;
+}
+
+/* 삭제 버튼: 평소엔 흐리게, 마우스를 올리면 빨간색 */
+.todo-delete {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+/*
+  체크박스 아이콘
+  - 기본 체크박스 모양을 지우고(appearance: none) 직접 그린다.
+  - 체크 안 됨: 빈 네모 (⬜)
+  - 체크 됨: 초록 네모 + 흰 체크 표시 (✅)
+*/
+.todo-check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+
+  &:hover {
+    border-color: #22c55e;
+  }
+
+  &:checked {
+    border-color: #22c55e;
+    background-color: #22c55e;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5l3.5 3.5L13 4.5'/%3E%3C/svg%3E");
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.todo-empty,
+.todo-count {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.todo-empty {
+  text-align: center;
+}
+
+.todo-count {
+  text-align: right;
+}

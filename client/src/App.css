@@ -182,3 +182,16 @@
     border-right-color: var(--border);
   }
 }
+
+/* 메인 화면 상단 제목 */
+.app-header {
+  h1 {
+    margin: 0 0 8px;
+  }
+}
+
+/* 목록이 화면 가운데가 아니라 위쪽부터 쌓이도록 */
+#center {
+  justify-content: flex-start;
+  padding-top: 64px;
+}
