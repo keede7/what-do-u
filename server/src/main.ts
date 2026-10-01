@@ -3,7 +3,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule, ObserveInstrument } from './app.module.js';
 import { UsePipes, ValidationPipe } from '@nestjs/common';
-import { transform } from 'typescript';
 
 async function bootstrap() {
   // 루트 모듈(AppModule)을 기반으로 Nest 애플리케이션 인스턴스를 생성한다.

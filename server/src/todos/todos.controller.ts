@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Redirect, Header, HttpCode, ParseIntPipe, Delete, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Redirect, Header, HttpCode, ParseIntPipe, Delete, } from '@nestjs/common';
 import { TodosService } from './todos.service.js';
 import type Todo from './entity/todo.js';
 // type이 있으면 nest가 실행시 어떤클래스로 바꿔야하는지 알 수 없다.
 import CreateDto from './dto/create-dto.js';
+import ModifyDto from './dto/modify-dto.js';
 
 
 // '/todos' 경로로 들어오는 HTTP 요청을 처리하는 컨트롤러.
@@ -11,10 +12,10 @@ import CreateDto from './dto/create-dto.js';
 export class TodosController {
   // TodosModule의 providers에 등록된 TodosService가 자동으로 주입된다.
   constructor(
-      private readonly todosService: TodosService
-    ) { 
+    private readonly todosService: TodosService
+  ) {
 
-    }
+  }
 
   // GET /todos → 전체 목록
   @Get()
@@ -32,14 +33,22 @@ export class TodosController {
   @Post()
   create(@Body() dto: CreateDto) {
     console.log(dto)
-    this.todosService.register(dto)
-    return dto;
+    return this.todosService.register(dto)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): void {
     console.log(`서버에서 삭제할 id : ${id}`)
     this.todosService.remove(id)
+  }
+
+  @Patch(':id')
+  modify(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ModifyDto,
+  ): Todo {
+    console.log(`수정할 id : ${id}, 체크 값 : ${JSON.stringify(dto)}`)
+    return this.todosService.modify(id, dto);
   }
   // @Post()
   // @HttpCode(203)                                   // 응답 코드 지정

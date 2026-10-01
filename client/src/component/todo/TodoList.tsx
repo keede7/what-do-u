@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import type Todo from '../../types/todo/todo';
-import { getTodos, createTodo, removeTodo } from '../../api/todo/todo.api'
+import { getTodos, createTodo, removeTodo, modifyTodo } from '../../api/todo/todo.api'
 import { TodoItem } from './TodoItem';
-import type { ChangeEvent, MouseEvent } from 'react'
+import type { ChangeEvent } from 'react'
 
 export default function TodoList() {
 
@@ -29,6 +29,21 @@ export default function TodoList() {
                 () => setTodos(todos => todos.filter((todo) => todo.id !== id))
             )
     }
+    
+    function onCheck(id: number, e: ChangeEvent<HTMLInputElement>) {
+        console.log(`check id : ${id}`);
+        const target = todos.find(todo => todo.id === id)
+        if(!target) {
+            return;
+        }
+        const checked = e.target.checked;
+        console.log(`checked : ${checked}`)
+        
+        modifyTodo(id, checked)
+            .then(
+                (data) => setTodos(todos => todos.map(todo => todo.id === id ? data : todo))
+        ); 
+    }
 
     // 화면이 처음 뜰 때 한 번만 목록을 불러온다.
     useEffect(() => {
@@ -36,7 +51,7 @@ export default function TodoList() {
             .then((data) => {
                 console.log(data)
                 if (!Array.isArray(data)) throw new Error('예상과 다른 응답');
-                setTodos(data)
+                setTodos((data))
             })
             .catch(() => setError('목록을 불러오지 못했어요.'))
             .finally(() => setLoading(false));
@@ -66,7 +81,7 @@ export default function TodoList() {
             <ul>
                 {/* 상위 구조에서 값과 기능 자체만을 넘겨준다. */}
                 {todos.map((todo) =>
-                    <TodoItem key={todo.id} todo={todo} onDelete={remove} />
+                    <TodoItem key={todo.id} todo={todo} onDelete={remove} onCheck={onCheck}/>
                     // <li key={todo.id}>
                     //      {todo.done ? '✅' : '⬜'} {todo.title}
                     // </li>

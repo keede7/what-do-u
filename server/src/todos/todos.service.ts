@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import Todo from './entity/todo.js'
 import CreateDto from './dto/create-dto.js';
+import ModifyDto from './dto/modify-dto.js';
 // Todo 한 건의 형태
 // export interface Todo {
 //   id: number;
@@ -45,6 +46,7 @@ export class TodosService {
     }
     
     this.todos.push(target);
+    console.log(`target : ${JSON.stringify(target)}`)
     console.log('push 직후:', this.todos);
     return target
   }
@@ -54,5 +56,15 @@ export class TodosService {
     this.todos = this.todos.filter(todo => todo.id !== id);
     console.log(`삭제 후 목록 결과 : ${JSON.stringify(this.todos)}`)
     return target;
+  }
+
+  modify(id: number, dto: ModifyDto): Todo {
+    console.log(`dto : ${dto}`)
+    const target = this.findOne(id)
+    const updated = {...target, done: dto.checked}
+
+    this.todos = this.todos.map(todo => todo.id === id ? updated : todo);
+    console.log(`수정 후 목록 : ${JSON.stringify(this.todos)}`)
+    return updated;
   }
 }
