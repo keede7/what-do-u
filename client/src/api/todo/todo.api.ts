@@ -17,3 +17,7 @@ export const createTodo = (todo: Todo) =>
     api.post<Todo>('/todos',  todo )
     .then((res) => res.data);
 
+export const removeTodo = (id: number) => api.delete(`/todos/${id}`)
+    .then((res) => {
+        console.log(res)
+    })

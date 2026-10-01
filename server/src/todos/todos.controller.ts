@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Redirect, Header, HttpCode, ParseIntPipe, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Redirect, Header, HttpCode, ParseIntPipe, Delete, } from '@nestjs/common';
 import { TodosService } from './todos.service.js';
 import type Todo from './entity/todo.js';
 // type이 있으면 nest가 실행시 어떤클래스로 바꿔야하는지 알 수 없다.
@@ -36,6 +36,11 @@ export class TodosController {
     return dto;
   }
 
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number): void {
+    console.log(`서버에서 삭제할 id : ${id}`)
+    this.todosService.remove(id)
+  }
   // @Post()
   // @HttpCode(203)                                   // 응답 코드 지정
   // @Header('Cache-Control', 'no-store')             // 커스텀 헤더

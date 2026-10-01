@@ -48,4 +48,11 @@ export class TodosService {
     console.log('push 직후:', this.todos);
     return target
   }
+
+  remove(id: number): Todo {
+    const target = this.findOne(id);
+    this.todos = this.todos.filter(todo => todo.id !== id);
+    console.log(`삭제 후 목록 결과 : ${JSON.stringify(this.todos)}`)
+    return target;
+  }
 }

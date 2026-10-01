@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type Todo from '../../types/todo/todo';
-import { getTodos, createTodo } from '../../api/todo/todo.api'
+import { getTodos, createTodo, removeTodo } from '../../api/todo/todo.api'
 import { TodoItem } from './TodoItem';
 import type { ChangeEvent, MouseEvent } from 'react'
 
@@ -21,10 +21,13 @@ export default function TodoList() {
         setDone(e.target.checked)
     }
 
-    const todo = {
-        id: 0,
-        title: '새로추가',
-        done: false
+    function remove(id: number) {
+        console.log(`remove id : ${id}`)
+        removeTodo(id)
+            .then(
+                // 새 배열로 교체하기 위해서 todo => todo.filter로 적용한다. 
+                () => setTodos(todos => todos.filter((todo) => todo.id !== id))
+            )
     }
 
     // 화면이 처음 뜰 때 한 번만 목록을 불러온다.
@@ -61,8 +64,9 @@ export default function TodoList() {
             </button>
             <button onClick={() => getTodos()}>조회하기</button>
             <ul>
+                {/* 상위 구조에서 값과 기능 자체만을 넘겨준다. */}
                 {todos.map((todo) =>
-                    <TodoItem id={todo.id} title={todo.title} done={todo.done} />
+                    <TodoItem key={todo.id} todo={todo} onDelete={remove} />
                     // <li key={todo.id}>
                     //      {todo.done ? '✅' : '⬜'} {todo.title}
                     // </li>
