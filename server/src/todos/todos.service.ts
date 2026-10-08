@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import Todo from './entity/todo.js'
 import CreateDto from './dto/create-dto.js';
 import ModifyDto from './dto/modify-dto.js';
@@ -13,6 +15,12 @@ import ModifyDto from './dto/modify-dto.js';
 // @Service의 역할
 @Injectable()
 export class TodosService {
+  constructor(
+    @InjectRepository(Todo)
+    private todoRepository: Repository<Todo>,
+  ) {
+
+  }
   // 임시 데이터 (DB 연결 전까지 메모리에 보관, 서버 재시작 시 초기화됨)
   private todos: Todo[] = [
     { id: 1, title: '장보기', done: false },
@@ -20,51 +28,54 @@ export class TodosService {
     { id: 3, title: '운동하기', },
   ];
 
+  /*
+  async await를 사용해야하는 이유는 nodejs는 싱글 스레드로 동작하고 논블락킹의 메커니즘을 가졌기 때문에
+  해당 작업이 종료되기 전에 다음 작업이 처리되므로 spring 과는 다르게 일이 순서대로 처리되지 않는다.
+  */
+
   // 전체 목록 조회
-  findAll(): Todo[] {
-    return this.todos;
+  async findAll(): Promise<Todo[]> {
+    return await this.todoRepository.find();
   }
 
   // id로 한 건 조회. 없으면 404 Not Found 응답을 보낸다.
-  findOne(id: number): Todo {
-    const todo = this.todos.find((t) => t.id === id);
+  async findOne(id: number): Promise<Todo> {
+
+    const todo = await this.todoRepository.findOneBy({id})
+
     if (!todo) {
       throw new NotFoundException(`Todo #${id} not found`);
     }
     return todo;
   }
 
-  register(todo: CreateDto): Todo {
-    const nextId =
-    this.todos.length > 0
-      ? Math.max(...this.todos.map((todo) => todo.id)) + 1
-      : 1;
+  async register(todo: CreateDto): Promise<Todo> {
+    // const nextId =
+    // this.todos.length > 0
+    //   ? Math.max(...this.todos.map((todo) => todo.id)) + 1
+    //   : 1;
 
     const target: Todo = {
       ...todo.toEntity(),
-      id: nextId,
+      // id: nextId,
     }
-    
-    this.todos.push(target);
-    console.log(`target : ${JSON.stringify(target)}`)
-    console.log('push 직후:', this.todos);
-    return target
+
+    const entity = await this.todoRepository.save(target)
+    console.log(`target : ${JSON.stringify(entity)}`)
+    return entity
   }
 
-  remove(id: number): Todo {
-    const target = this.findOne(id);
-    this.todos = this.todos.filter(todo => todo.id !== id);
-    console.log(`삭제 후 목록 결과 : ${JSON.stringify(this.todos)}`)
-    return target;
+  async remove(id: number) {
+    const target = await this.findOne(id);
+    const result = await this.todoRepository.delete(id)
+    // 성공 result : {"raw":[],"affected":1}
+    console.log(`result : ${JSON.stringify(result)}`)
   }
 
-  modify(id: number, dto: ModifyDto): Todo {
-    console.log(`dto : ${dto}`)
-    const target = this.findOne(id)
-    const updated = {...target, done: dto.checked}
+  async modify(id: number, dto: ModifyDto): Promise<Todo> {
+    const target = await this.findOne(id)
+    const updated = await this.todoRepository.save({...target, done: dto.checked})
 
-    this.todos = this.todos.map(todo => todo.id === id ? updated : todo);
-    console.log(`수정 후 목록 : ${JSON.stringify(this.todos)}`)
     return updated;
   }
 }

@@ -19,13 +19,13 @@ export class TodosController {
 
   // GET /todos → 전체 목록
   @Get()
-  findAll(): Todo[] {
+  findAll(): Promise<Todo[]> {
     return this.todosService.findAll();
   }
   // GET /todos/:id → 한 건 조회
   // ParseIntPipe: URL의 문자열 id를 숫자로 변환한다. 숫자가 아니면 400 Bad Request 응답을 보낸다.
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Todo {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
     return this.todosService.findOne(id);
   }
 
@@ -46,7 +46,7 @@ export class TodosController {
   modify(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: ModifyDto,
-  ): Todo {
+  ): Promise<Todo> {
     console.log(`수정할 id : ${id}, 체크 값 : ${JSON.stringify(dto)}`)
     return this.todosService.modify(id, dto);
   }

@@ -1,14 +1,22 @@
+import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm'
+
+@Entity()
 class Todo {
+    @PrimaryGeneratedColumn()
     id: number;
+    
+    @Column()
     title: string;
+
+    @Column({
+        default: false,
+    })
     done?: boolean;
 
     constructor(
-        id: number,
         title: string,
         done?: boolean
     ) {
-        this.id = id
         this.title = title
         this.done = done
     }

@@ -11,7 +11,6 @@ class CreateDto {
     
     toEntity(): Todo {
         return new Todo(
-            0,
             this.title,
             this.done
         );
