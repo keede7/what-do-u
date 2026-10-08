@@ -3,6 +3,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule, ObserveInstrument } from './app.module.js';
 import { UsePipes, ValidationPipe } from '@nestjs/common';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger'
 
 async function bootstrap() {
   // 루트 모듈(AppModule)을 기반으로 Nest 애플리케이션 인스턴스를 생성한다.
@@ -22,6 +23,15 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:5173'
   })
+
+  const swagger = new DocumentBuilder()
+  .setTitle('Todo API')
+  .setDescription('Todo 목록 관리 API')
+  .setVersion('1.0')
+  .build();
+
+  const document = SwaggerModule.createDocument(app, swagger);
+  SwaggerModule.setup('docs', app, document) // localhost:3000/docs 서버 포트의 docs URI
   // 환경변수 PORT가 있으면 그 포트를, 없으면 3000번 포트로 서버를 연다.
   await app.listen(process.env.PORT ?? 3000);
 }

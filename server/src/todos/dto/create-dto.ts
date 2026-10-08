@@ -1,13 +1,20 @@
 import { IsString, IsBoolean, IsOptional } from 'class-validator';
+import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger'
 import Todo from "../entity/todo.js";
 
 
 class CreateDto {
     
+    @ApiProperty({
+        example: '장보기'
+    })
     @IsString()
-    private title: string
+    title: string
+    @ApiPropertyOptional({
+        default: false
+    })
     @IsBoolean()
-    private done: boolean = false
+    done: boolean = false
     
     toEntity(): Todo {
         return new Todo(
