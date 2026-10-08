@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { createObserveModule } from '@nestjs/observe';
 import { TodosModule } from './todos/todos.module.js';
 
@@ -32,7 +33,19 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
             serviceId: 'server',
           }),
         ]),
-
+    TypeOrmModule.forRoot({
+      // type: 'mysql',
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: 'root',
+      type: 'better-sqlite3',
+      database: 'todo.sqlite',
+      entities: [],
+      // synchronize를 true로 설정하는 것은 운영 단계에서 데이터를 잃는 등 악영향을 끼칠 수 있는 요소가 많기 때문에 
+      // 프로덕션 레벨에서는 false로 설정하는 것이 더 권장됩니다.
+      synchronize: true,
+    }),
     // ── 도메인 모듈 ──────────────────────────────────
     TodosModule, // /todos
   ],
