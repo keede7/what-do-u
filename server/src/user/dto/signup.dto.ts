@@ -6,7 +6,7 @@ class SignUpDto {
 
     @IsNotEmpty()
     @ApiProperty({
-        default: '사용자1'
+        example: '사용자1'
     })
     name: string
 

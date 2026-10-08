@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm'
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm'
+import User from '../../user/entity/user.js';
 
 @Entity()
 class Todo {
@@ -12,6 +13,15 @@ class Todo {
         default: false,
     })
     done?: boolean;
+
+    @ManyToOne(
+        () => User, 
+        {createForeignKeyConstraints: false}
+    )
+    @JoinColumn({
+        name: 'user_id',
+    })
+    user: User
 
     constructor(
         title: string,
