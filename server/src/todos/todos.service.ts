@@ -21,12 +21,6 @@ export class TodosService {
   ) {
 
   }
-  // 임시 데이터 (DB 연결 전까지 메모리에 보관, 서버 재시작 시 초기화됨)
-  private todos: Todo[] = [
-    { id: 1, title: '장보기', done: false },
-    { id: 2, title: 'NestJS 공부하기', done: true },
-    { id: 3, title: '운동하기', },
-  ];
 
   /*
   async await를 사용해야하는 이유는 nodejs는 싱글 스레드로 동작하고 논블락킹의 메커니즘을 가졌기 때문에

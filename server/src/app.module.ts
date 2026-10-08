@@ -4,6 +4,8 @@ import { DataSource } from 'typeorm'
 import { createObserveModule } from '@nestjs/observe';
 import { TodosModule } from './todos/todos.module.js';
 import Todo from './todos/entity/todo.js';
+import User from './user/entity/user.js';
+import { UserModule } from './user/user.module.js';
 
 // Observe 모듈과 계측기(Instrument)를 한 쌍으로 생성한다.
 // - ObserveModule: 아래 imports에 등록해 설정값(키, 서비스 ID 등)을 넘기는 용도
@@ -43,13 +45,14 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       // password: 'root',
       type: 'better-sqlite3',
       database: 'todo.sqlite',
-      entities: [Todo],
+      entities: [Todo, User],
       // synchronize를 true로 설정하는 것은 운영 단계에서 데이터를 잃는 등 악영향을 끼칠 수 있는 요소가 많기 때문에 
       // 프로덕션 레벨에서는 false로 설정하는 것이 더 권장됩니다.
       synchronize: true,
     }),
     // ── 도메인 모듈 ──────────────────────────────────
     TodosModule, // /todos
+    UserModule,
   ],
 })
 export class AppModule {
